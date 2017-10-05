@@ -13,7 +13,7 @@ public class ClientHandler implements Runnable{
     Thread thread;
     Socket socket;
     String name;
-    LocalTime lastHeartbeat;
+    LocalTime lastHeartbeat = LocalTime.now();
     Scanner in;
     PrintWriter out;
     ChatRoom room;
@@ -37,18 +37,12 @@ public class ClientHandler implements Runnable{
         }
         registerInChatRoom();
         handleConversationUntilQUIT();
-        try {
-            System.out.println("Closing socket...");
-            room.removeClient(this);
-            socket.close();
-            //TODO how can i close the whole instance of the ClientHandler?
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        room.removeClient(this);
+        killClient();
     }
 
     private void registerInChatRoom() {
-        ChatMessage message = new ChatMessage(in.nextLine());
+        /*ChatMessage message = new ChatMessage(in.nextLine());
         System.out.println(message.getMessage());
         boolean registerSuccessful= false;
         do{
@@ -58,15 +52,29 @@ public class ClientHandler implements Runnable{
                     registerSuccessful=true;
                 }
             } else {
-                out.println(ServerToClientMessages.ERROR_NAME_NOT_UNIQUE);
+                out.println(PROTOCOLMESSAGES.ERROR_NAME_NOT_UNIQUE);
                 message= new ChatMessage(in.nextLine());
             }
         }while(!registerSuccessful);
-        //accept client
+        */
+        while(in.hasNext()){
+            ChatMessage message = new ChatMessage(in.nextLine());
+            System.out.println(message.getMessage());
+            if(message.isValid() && message.getType().equalsIgnoreCase("JOIN")){
+                name= message.getClientName();
+                if(room.register(this)){
+                    break;
+                }
+                out.println(PROTOCOLMESSAGES.ERROR_NAME_NOT_UNIQUE);
+            }else{
+                out.println(PROTOCOLMESSAGES.ERROR_INVALID_MESSAGE);
+            }
+        }
     }
 
 
     private void handleConversationUntilQUIT() {
+/*
         String messageRaw = in.nextLine();
         printInputToConsole(messageRaw); //DEBUGGING
         ChatMessage message = new ChatMessage(messageRaw);
@@ -78,13 +86,29 @@ public class ClientHandler implements Runnable{
             } else if(message.getType()=="IMAV"){
                 lastHeartbeat = LocalTime.now();
             } else{
-                out.println(ServerToClientMessages.ERROR_INVALID_MESSAGE);
+                out.println(PROTOCOLMESSAGES.ERROR_INVALID_MESSAGE);
             }
             messageRaw = in.nextLine();
             printInputToConsole(messageRaw); //DEBUGGING
             message = new ChatMessage(messageRaw);
         }
         System.out.println("Client decided to quit");
+*/
+        while(in.hasNext()){
+            String messageRaw = in.nextLine();
+            printInputToConsole(messageRaw); //DEBUGGING
+            ChatMessage message = new ChatMessage(messageRaw);
+            if(message.getType().equals("QUIT")){
+                break;
+            }else if(message.getType().equals("DATA")){
+                //send to chatroom
+                room.forwardMessageToRoom(message.getMessage());
+            } else if(message.getType()=="IMAV"){
+                lastHeartbeat = LocalTime.now();
+            } else{
+                out.println(PROTOCOLMESSAGES.ERROR_INVALID_MESSAGE);
+            }
+        }
     }
 
     public void forwardMessageToClient(String message) {
@@ -103,6 +127,16 @@ public class ClientHandler implements Runnable{
             return true;
         }
         return false;
+    }
+
+    public void killClient(){
+        try {
+            System.out.println("Closing socket...");
+            socket.close();
+            //TODO how can i close the whole instance of the ClientHandler?
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //for testing purposes

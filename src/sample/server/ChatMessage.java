@@ -25,26 +25,29 @@ public class ChatMessage {
         for(String s: TYPES){
             if(message.startsWith(s)){
                 type = i;
+                valid=true;
             }
             i++;
-            analyseMessage();
+        }
+        if(type==0){ //type is JOIN
+            extractName();
         }
     }
 
-    private void analyseMessage() {
-
-        if(type == 0){
-            //check name validity
-            int splitIndex = message.indexOf(",");
+    private void extractName() {
+        //check name validity
+        int splitIndex = message.indexOf(",");
+        if(splitIndex!=-1){
             String tempName= message.substring(5,splitIndex);
             if(tempName.length() <= 12){
-                valid = true;
                 //TODO check for unsuitable characters
                 clientName = tempName;
                 //TODO check if the server IP and PORT in message are valid
+            }else {
+                valid = false;
             }
-        }else if(type == 1){
-        //to implement later
+        }else{
+            valid = false;
         }
     }
 
@@ -57,7 +60,11 @@ public class ChatMessage {
     }
 
     public String getType() {
-        return TYPES[type];
+        if(valid){
+            return TYPES[type];
+        }else{
+            return "ERROR";
+        }
     }
 
     public String getClientName() {

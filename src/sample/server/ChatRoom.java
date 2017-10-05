@@ -17,6 +17,7 @@ public class ChatRoom {
             for (ClientHandler c : deadClientHandlers) {
                 list.remove(c.getName());
                 activeClientHandlers.remove(c);
+                c.killClient();
             }
             if (!deadClientHandlers.isEmpty()) {
                 forwardList();
@@ -41,7 +42,7 @@ public class ChatRoom {
             }
             ServerMain a = new ServerMain();
         }
-        newClient.forwardMessageToClient(ServerToClientMessages.J_OK);
+        newClient.forwardMessageToClient(PROTOCOLMESSAGES.J_OK);
         activeClientHandlers.add(newClient);
         list.add(newClient.getName());
         forwardList();
