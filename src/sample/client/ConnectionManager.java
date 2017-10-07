@@ -136,7 +136,7 @@ public class ConnectionManager {
     }
 
     /**
-     * sends QUIT message to the Server and calls the method that closes the Socket
+     * sends QUIT message to the Server and calls closeConnection()
      */
     public void sendQuit() {
         sendToServer("QUIT");

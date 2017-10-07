@@ -19,7 +19,6 @@ import java.util.Scanner;
  * This class is the Controller of the Chat application's FXML file.
  *
  */
-
 public class Controller {
 
     @FXML

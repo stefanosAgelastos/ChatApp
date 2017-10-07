@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 /**
  * This class loads the GUI of the CHat System.
  */
-
-
 public class Main extends Application {
 
     @Override

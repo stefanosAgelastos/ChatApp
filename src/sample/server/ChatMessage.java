@@ -19,7 +19,13 @@ public class ChatMessage {
     private String message;
     private String clientName;
 
-
+    /**
+     * the constructor receives a message as a parameter and detects the protocol's type of the message.
+     * If the type is detected then the field valid is set to true.
+     * If the messsage is type JOIN, then it also calls extractName(), that will check more in depth about
+     * the name's validity.
+     * @param message
+     */
     public ChatMessage(String message) {
         this.message = message;
         int i = 0;
@@ -35,15 +41,19 @@ public class ChatMessage {
         }
     }
 
+    /**
+     * extracts the name from a JOIN message. if the format of the message is not valid, or if the name is longer
+     * than 12 characters then the valid field is set to false.
+     */
     private void extractName() {
         //check name validity
         int splitIndex = message.indexOf(",");
         if(splitIndex!=-1){
             String tempName= message.substring(5,splitIndex);
-            if(tempName.length() <= 12){
+            if(tempName.length() < 13 && tempName.length()>0){
                 //TODO check for unsuitable characters
                 clientName = tempName;
-                //TODO check if the server IP and PORT in message are valid
+                //TODO check if the server IP and PORT in message are valid?
             }else {
                 valid = false;
             }
@@ -52,14 +62,26 @@ public class ChatMessage {
         }
     }
 
+    /**
+     *
+     * @return the raw message.
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     *
+     * @return the valid field value.
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     *
+     * @return the type of the message, or if no type is detected the String "ERROR"
+     */
     public String getType() {
         if(valid){
             return TYPES[type];
@@ -68,6 +90,10 @@ public class ChatMessage {
         }
     }
 
+    /**
+     *
+     * @return the value of the clientName field
+     */
     public String getClientName() {
         return clientName;
     }
