@@ -19,6 +19,7 @@ public class ChatMessage {
     private String message;
     private String clientName;
 
+
     public ChatMessage(String message) {
         this.message = message;
         int i = 0;

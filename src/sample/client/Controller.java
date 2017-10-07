@@ -14,6 +14,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+/**
+ *
+ * This class is the Controller of the Chat application's FXML file.
+ *
+ */
+
 public class Controller {
 
     @FXML
@@ -44,6 +50,9 @@ public class Controller {
     //connection fields
     private ConnectionManager connection= new ConnectionManager(this);
 
+    /**
+     * triggered when the "Connect" button is pressed on the GUI.
+     */
     public void makeConnection() {
         //TODO: validate user input
 
@@ -65,7 +74,7 @@ public class Controller {
         //this part attempts to register on the chat system with the given name
         String name = username.getText();
         if (connection.attemptLogin(name)) {
-            System.out.println("Login succesfull");
+            System.out.println("Login successful");
             //change user view
             parentPane.getChildren().remove(connectPane);
             chatPane.setOpacity(1);
@@ -73,14 +82,21 @@ public class Controller {
             connection.closeConnection();
             System.out.println("Login UNsuccesfull");
             //TODO inform user login was unsuccessful
-            //TODO bug when the user tries to login with new name.
         }
     }
+
+    /**
+     * Triggered when the "Send" button is clicked on the GUI.
+     */
     public void sendMessage() {
         connection.sendMessage(message.getText());
         message.clear();
     }
 
+    /**
+     * Triggered when the "Disconnect" button is clicked on the GUI.
+     *
+     */
     public void disconnect(){
         connection.sendQuit();
         parentPane.getChildren().add(connectPane);
