@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 /**
- * This class is responsible for handling the connection to the Chat server.
+ * This class is responsible for handling the connection of the Client side to the Chat server.
  */
 
 public class ConnectionManager {

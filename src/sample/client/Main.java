@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * This class loads the GUI of the CHat System.
+ * This class loads the GUI of the Chat System.
  */
 public class Main extends Application {
 

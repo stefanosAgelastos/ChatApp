@@ -24,7 +24,7 @@ public class ChatMessage {
      * If the type is detected then the field valid is set to true.
      * If the messsage is type JOIN, then it also calls extractName(), that will check more in depth about
      * the name's validity.
-     * @param message
+     * @param message the raw protocol message.
      */
     public ChatMessage(String message) {
         this.message = message;
@@ -50,8 +50,7 @@ public class ChatMessage {
         int splitIndex = message.indexOf(",");
         if(splitIndex!=-1){
             String tempName= message.substring(5,splitIndex);
-            if(tempName.length() < 13 && tempName.length()>0){
-                //TODO check for unsuitable characters
+            if(tempName.length() < 13 && tempName.length()>0 && tempName.matches("[a-zA-z0-9_\\-]*")){
                 clientName = tempName;
                 //TODO check if the server IP and PORT in message are valid?
             }else {
